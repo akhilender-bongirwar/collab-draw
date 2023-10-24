@@ -11,7 +11,7 @@ const initialState: NavState = {
   actionNavItem: null,
 };
 
-const navSlice = createSlice({
+export const navSlice = createSlice({
   name: "nav",
   initialState,
   reducers: {
