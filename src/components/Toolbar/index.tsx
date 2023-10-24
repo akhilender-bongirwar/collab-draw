@@ -11,7 +11,7 @@ const ToolBox: React.FC = () => {
     (state: any) => state.nav.activeNavItem
   );
   
-  const { color } = useSelector((state: any) => state.toolbox[activeNavItem]);
+  const { color, size } = useSelector((state: any) => state.toolbox[activeNavItem]);
   const showToolBox = activeNavItem === NAV_ITEMS.PENCIL;
   const showStroke =
     activeNavItem === NAV_ITEMS.PENCIL || activeNavItem === NAV_ITEMS.ERASER;
@@ -31,7 +31,7 @@ const ToolBox: React.FC = () => {
         <div className={styles.toolItem}>
           <h4 className={styles.text}>Brush size</h4>
           <div className={styles.items}>
-            <input type="range" min={1} max={10} onChange={handleBrushSize} />
+            <input type="range" min={1} max={10} onChange={handleBrushSize} value={size} />
           </div>
         </div>
       )}
