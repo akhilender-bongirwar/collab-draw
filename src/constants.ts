@@ -13,7 +13,8 @@ const NAV_ITEMS: Record<string,string> = {
     ERASER: 'ERASER',
     UNDO: 'UNDO',
     REDO: 'REDO',
-    DOWNLOAD: 'DOWNLOAD'
+    DOWNLOAD: 'DOWNLOAD',
+    CLEAR: 'CLEAR'
 }
 
 export {COLORS, NAV_ITEMS};

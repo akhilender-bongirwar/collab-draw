@@ -8,7 +8,7 @@ const Canvas: React.FC = () => {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const validToDraw = useRef<Boolean>(false);
   const storeHistory = useRef<ImageData[]>([]);
-  const historyIndex = useRef<number>(-1);
+  const historyIndex = useRef<number>(0);
 
   const { activeNavItem, actionNavItem } = useSelector(
     (state: any) => state.nav
@@ -34,14 +34,24 @@ const Canvas: React.FC = () => {
       actionNavItem === NAV_ITEMS.REDO
     ) {
       if (historyIndex.current > 0 && actionNavItem === NAV_ITEMS.UNDO)
-        historyIndex.current--;
+        historyIndex.current-=1;
       if (
         historyIndex.current < storeHistory.current.length - 1 &&
         actionNavItem === NAV_ITEMS.REDO
       )
-        historyIndex.current++;
+        historyIndex.current+=1;
       const imageData = storeHistory.current[historyIndex.current];
       context?.putImageData(imageData, 0, 0);
+    } else if (actionNavItem === NAV_ITEMS.CLEAR) {
+      const canvas = canvasRef.current;
+      const context = canvas?.getContext("2d");
+      if (canvas && context) {
+        context.clearRect(0, 0, canvas.width, canvas.height);
+        context.fillStyle = COLORS.WHITE;
+        context.fillRect(0, 0, canvas.width, canvas.height);
+        storeHistory.current = [];
+        historyIndex.current = 0;
+      }
     }
     dispatch(actionItemClick(null));
   }, [actionNavItem, dispatch]);
