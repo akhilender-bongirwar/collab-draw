@@ -7,6 +7,8 @@ const Canvas: React.FC = () => {
   const dispatch = useDispatch();
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const validToDraw = useRef<Boolean>(false);
+  const storeHistory = useRef<ImageData[]>([]);
+  const historyIndex = useRef<number>(-1);
 
   const { activeNavItem, actionNavItem } = useSelector(
     (state: any) => state.nav
@@ -19,14 +21,27 @@ const Canvas: React.FC = () => {
   useEffect(() => {
     if (!canvasRef.current) return;
     const canvas = canvasRef.current;
+    const context = canvas.getContext("2d");
 
     if (actionNavItem === NAV_ITEMS.DOWNLOAD) {
       const URL = canvas.toDataURL();
-      // console.log(URL);
       const anchor = document.createElement("a");
       anchor.href = URL;
       anchor.download = "canvas-image.png";
       anchor.click();
+    } else if (
+      actionNavItem === NAV_ITEMS.UNDO ||
+      actionNavItem === NAV_ITEMS.REDO
+    ) {
+      if (historyIndex.current > 0 && actionNavItem === NAV_ITEMS.UNDO)
+        historyIndex.current--;
+      if (
+        historyIndex.current < storeHistory.current.length - 1 &&
+        actionNavItem === NAV_ITEMS.REDO
+      )
+        historyIndex.current++;
+      const imageData = storeHistory.current[historyIndex.current];
+      context?.putImageData(imageData, 0, 0);
     }
     dispatch(actionItemClick(null));
   }, [actionNavItem, dispatch]);
@@ -85,6 +100,15 @@ const Canvas: React.FC = () => {
 
     const handleMouseUp = (e: MouseEvent) => {
       validToDraw.current = false;
+      const imageData = context?.getImageData(
+        0,
+        0,
+        canvas.width,
+        canvas.height
+      );
+      if (!imageData) return;
+      storeHistory.current.push(imageData);
+      historyIndex.current = storeHistory.current.length - 1;
     };
 
     canvas.addEventListener("mousedown", handleMouseDown);
@@ -97,7 +121,6 @@ const Canvas: React.FC = () => {
       canvas.removeEventListener("mouseup", handleMouseUp);
     };
   }, []);
-  // console.log(color, size);
   return <canvas ref={canvasRef} />;
 };
 
