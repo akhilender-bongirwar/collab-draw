@@ -20,6 +20,7 @@ const initialState: ToolBoxState = {
   [NAV_ITEMS.UNDO]: {},
   [NAV_ITEMS.REDO]: {},
   [NAV_ITEMS.DOWNLOAD]: {},
+  [NAV_ITEMS.CLEAR]: {},
 };
 
 const toolboxSlice = createSlice({

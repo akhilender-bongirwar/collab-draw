@@ -6,6 +6,7 @@ import {
   faUndo,
   faRedo,
   faDownload,
+  faTrash,
 } from "@fortawesome/free-solid-svg-icons";
 import styles from "./index.module.css";
 import { useDispatch, useSelector } from "react-redux";
@@ -18,8 +19,8 @@ const Navbar: React.FC = () => {
   const activeNavItem: NAV_ITEM_KEYS = useSelector(
     (state: any) => state.nav.activeNavItem
   );
-  const handleNavClick = (navIten : NAV_ITEM_KEYS) => {
-    dispatch(navItemClick(navIten));
+  const handleNavClick = (navItem : NAV_ITEM_KEYS) => {
+    dispatch(navItemClick(navItem));
   }
   const handleActionClick = (actionItem : NAV_ITEM_KEYS) => {
     dispatch(actionItemClick(actionItem));
@@ -40,6 +41,9 @@ const Navbar: React.FC = () => {
       </div>
       <div className={styles.iconContainer} onClick={() => handleActionClick(NAV_ITEMS.DOWNLOAD)}>
         <FontAwesomeIcon icon={faDownload} className={styles.icon} />
+      </div>
+      <div className={styles.iconContainer} onClick={() => handleActionClick(NAV_ITEMS.CLEAR)}>
+        <FontAwesomeIcon icon={faTrash} className={styles.icon} />
       </div>
     </div>
   );
