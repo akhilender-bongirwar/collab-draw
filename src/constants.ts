@@ -18,3 +18,4 @@ const NAV_ITEMS: Record<string,string> = {
 
 export {COLORS, NAV_ITEMS};
 export type NAV_ITEM_KEYS = keyof typeof NAV_ITEMS;
+export type COLOR_KEYS = keyof typeof COLORS;
