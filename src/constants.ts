@@ -16,4 +16,5 @@ const NAV_ITEMS: Record<string,string> = {
     DOWNLOAD: 'DOWNLOAD'
 }
 
-export {COLORS, NAV_ITEMS}
+export {COLORS, NAV_ITEMS};
+export type NAV_ITEM_KEYS = keyof typeof NAV_ITEMS;
