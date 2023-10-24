@@ -1,17 +1,36 @@
-import { NAV_ITEM_KEYS } from "@/constants";
+import { NAV_ITEMS } from "@/constants";
 import React, { useEffect, useLayoutEffect, useRef } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { actionItemClick } from "@/slice/navSlice";
 
 const Canvas: React.FC = () => {
+  const dispatch = useDispatch();
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const validToDraw = useRef<Boolean>(false);
 
-  const activeNavItem: NAV_ITEM_KEYS = useSelector(
-    (state: any) => state.nav.activeNavItem
+  const {activeNavItem, actionNavItem} = useSelector(
+    (state: any) => state.nav
   );
+
   const { color, size } = useSelector(
     (state: any) => state.toolbox[activeNavItem]
   );
+    
+  useEffect(() => {
+    if (!canvasRef.current) return;
+    const canvas = canvasRef.current;
+    const context = canvas.getContext("2d");
+
+    if(actionNavItem === NAV_ITEMS.DOWNLOAD) {
+      const URL = canvas.toDataURL();
+      // console.log(URL);
+      const anchor = document.createElement("a");
+      anchor.href = URL;
+      anchor.download = "canvas-image.png";
+      anchor.click();
+    }
+    dispatch(actionItemClick(null));
+  },[actionNavItem, dispatch]);
 
   useEffect(() => {
     if (!canvasRef.current) return;
@@ -34,24 +53,24 @@ const Canvas: React.FC = () => {
       canvas.height = window.innerHeight;
     }
 
-    const beginPath = (x:number, y:number) => {
+    const beginPath = (x: number, y: number) => {
       if (!context) return;
       context.beginPath();
       context.moveTo(x, y);
-    }
+    };
 
     const handleMouseDown = (e: MouseEvent) => {
       validToDraw.current = true;
       beginPath(e.clientX, e.clientY);
     };
 
-    const drawLines = (x:number, y:number) => {
+    const drawLines = (x: number, y: number) => {
       if (!context) return;
       context.lineTo(x, y);
       context.stroke();
-    }
+    };
     const handleMouseMove = (e: MouseEvent) => {
-      if(!validToDraw.current) return;
+      if (!validToDraw.current) return;
       drawLines(e.clientX, e.clientY);
     };
 
