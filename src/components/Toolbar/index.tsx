@@ -16,12 +16,30 @@ const ToolBox: React.FC = () => {
       <div className={styles.toolItem}>
         <h4 className={styles.text}>Stroke Color</h4>
         <div className={styles.items}>
-          <div className={styles.colorBox} style={{backgroundColor: COLORS.BLACK}} />
-          <div className={styles.colorBox} style={{backgroundColor: COLORS.RED}} />
-          <div className={styles.colorBox} style={{backgroundColor: COLORS.GREEN}} />
-          <div className={styles.colorBox} style={{backgroundColor: COLORS.BLUE}} />
-          <div className={styles.colorBox} style={{backgroundColor: COLORS.ORANGE}} />
-          <div className={styles.colorBox} style={{backgroundColor: COLORS.YELLOW}} />
+          <div
+            className={styles.colorBox}
+            style={{ backgroundColor: COLORS.BLACK }}
+          />
+          <div
+            className={styles.colorBox}
+            style={{ backgroundColor: COLORS.RED }}
+          />
+          <div
+            className={styles.colorBox}
+            style={{ backgroundColor: COLORS.GREEN }}
+          />
+          <div
+            className={styles.colorBox}
+            style={{ backgroundColor: COLORS.BLUE }}
+          />
+          <div
+            className={styles.colorBox}
+            style={{ backgroundColor: COLORS.ORANGE }}
+          />
+          <div
+            className={styles.colorBox}
+            style={{ backgroundColor: COLORS.YELLOW }}
+          />
         </div>
       </div>
     </div>
