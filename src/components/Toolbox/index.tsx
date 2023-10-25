@@ -3,6 +3,7 @@ import styles from "./index.module.css";
 import { useDispatch, useSelector } from "react-redux";
 import { changeColor, changeBrushSize } from "@/slice/toolBoxSlice";
 import cx from "classnames";
+import { socket } from "@/socket";
 
 const ToolBox: React.FC = () => {
   const dispatch = useDispatch();
@@ -17,11 +18,13 @@ const ToolBox: React.FC = () => {
     activeNavItem === NAV_ITEMS.PENCIL || activeNavItem === NAV_ITEMS.ERASER;
 
   const handleBrushSize = (e: React.ChangeEvent<HTMLInputElement>) => {
-     dispatch(changeBrushSize({item: activeNavItem, size: Number(e.target.value)}))
+     dispatch(changeBrushSize({item: activeNavItem, size: Number(e.target.value)}));
+     socket.emit('changeStyles', { color, size: Number(e.target.value)});
   };
 
   const updateColor = (color: COLOR_KEYS) => {
     dispatch(changeColor({ item: activeNavItem, color }));
+    socket.emit('changeStyles', { color, size });
   }
 
 

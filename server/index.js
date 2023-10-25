@@ -24,6 +24,10 @@ io.on("connection", (socket) => {
     socket.broadcast.emit('traceLine', arg)
   })
 
+  socket.on('changeStyles', (arg) => {
+    socket.broadcast.emit('changeStyles', arg)
+  })
+
 });
 
 httpServer.listen(8080);

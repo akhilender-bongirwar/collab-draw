@@ -1,8 +1,13 @@
-import { COLORS, NAV_ITEMS } from "@/constants";
+import { COLORS, COLOR_KEYS, NAV_ITEMS } from "@/constants";
 import React, { useEffect, useLayoutEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { actionItemClick } from "@/slice/navSlice";
 import { socket } from "@/socket";
+
+interface DRAW_STYLE {
+  color: COLOR_KEYS;
+  size: number;
+}
 
 const Canvas: React.FC = () => {
   const dispatch = useDispatch();
@@ -42,7 +47,9 @@ const Canvas: React.FC = () => {
       )
         historyIndex.current+=1;
       const imageData = storeHistory.current[historyIndex.current];
-      context?.putImageData(imageData, 0, 0);
+      if(context){
+        context.putImageData(imageData, 0, 0);
+      }
     } else if (actionNavItem === NAV_ITEMS.CLEAR) {
       const canvas = canvasRef.current;
       const context = canvas?.getContext("2d");
@@ -71,12 +78,21 @@ const Canvas: React.FC = () => {
     if (!canvasRef.current) return;
     const canvas = canvasRef.current;
     const context = canvas.getContext("2d");
-    const changeStyle = () => {
+    const changeStyle = (color: COLOR_KEYS, size: number) => {
       if (!context) return;
       context.strokeStyle = color;
       context.lineWidth = size;
     };
-    changeStyle();
+    const handleChangeStyles = (styles : DRAW_STYLE) =>{
+      changeStyle(styles.color, styles.size);
+    }
+    changeStyle(color,size);
+    socket.on('changeStyles', handleChangeStyles);
+
+    return () => {
+      socket.off('changeStyles', handleChangeStyles);
+    }
+
   }, [color, size]);
 
   useLayoutEffect(() => {
@@ -124,11 +140,11 @@ const Canvas: React.FC = () => {
       historyIndex.current = storeHistory.current.length - 1;
     };
 
-    const handlePath = (data: any) => {
+    const handlePath = (data: MouseEvent) => {
       beginPath(data.x, data.y);
     }
 
-    const handleDrawPath = (data: any) => {
+    const handleDrawPath = (data: MouseEvent) => {
       traceLine(data.x, data.y);
     }
 
@@ -139,9 +155,9 @@ const Canvas: React.FC = () => {
     socket.on("beginPath", handlePath);
     socket.on("traceLine", handleDrawPath);
 
-    socket.on("connect", () => {
-      console.log("Client side connected with the server");
-    })
+    // socket.on("connect", () => {
+    //   console.log("Client side connected with the server");
+    // })
 
     return () => {
       canvas.removeEventListener("mousedown", handleMouseDown);
