@@ -2,6 +2,7 @@ import { COLORS, NAV_ITEMS } from "@/constants";
 import React, { useEffect, useLayoutEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { actionItemClick } from "@/slice/navSlice";
+import { socket } from "@/socket";
 
 const Canvas: React.FC = () => {
   const dispatch = useDispatch();
@@ -96,16 +97,18 @@ const Canvas: React.FC = () => {
     const handleMouseDown = (e: MouseEvent) => {
       validToDraw.current = true;
       beginPath(e.clientX, e.clientY);
+      socket.emit('beginPath', {x: e.clientX, y: e.clientY});
     };
 
-    const drawLines = (x: number, y: number) => {
+    const traceLine = (x: number, y: number) => {
       if (!context) return;
       context.lineTo(x, y);
       context.stroke();
     };
     const handleMouseMove = (e: MouseEvent) => {
       if (!validToDraw.current) return;
-      drawLines(e.clientX, e.clientY);
+      traceLine(e.clientX, e.clientY);
+      socket.emit('traceLine', {x: e.clientX, y: e.clientY});
     };
 
     const handleMouseUp = (e: MouseEvent) => {
@@ -121,14 +124,31 @@ const Canvas: React.FC = () => {
       historyIndex.current = storeHistory.current.length - 1;
     };
 
+    const handlePath = (data: any) => {
+      beginPath(data.x, data.y);
+    }
+
+    const handleDrawPath = (data: any) => {
+      traceLine(data.x, data.y);
+    }
+
     canvas.addEventListener("mousedown", handleMouseDown);
     canvas.addEventListener("mousemove", handleMouseMove);
     canvas.addEventListener("mouseup", handleMouseUp);
+
+    socket.on("beginPath", handlePath);
+    socket.on("traceLine", handleDrawPath);
+
+    socket.on("connect", () => {
+      console.log("Client side connected with the server");
+    })
 
     return () => {
       canvas.removeEventListener("mousedown", handleMouseDown);
       canvas.removeEventListener("mousemove", handleMouseMove);
       canvas.removeEventListener("mouseup", handleMouseUp);
+      socket.off('beginPath', handlePath);
+      socket.off('drawPath', handleDrawPath);
     };
   }, []);
   return <canvas ref={canvasRef} />;
