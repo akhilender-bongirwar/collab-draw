@@ -11,5 +11,25 @@
     &.active {
       background-color: theme("colors.text2");
     }
+    .icon {
+      color: theme("colors.text1");
+      font-size: 20px;
+    }
+  }
+}
+
+@media screen and (max-width: 1024px) {
+  .navContainer {
+    @apply w-3/4;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .navContainer {
+    @apply w-full flex;
+
+    .iconContainer {
+      @apply flex justify-between;
+    }
   }
 }
