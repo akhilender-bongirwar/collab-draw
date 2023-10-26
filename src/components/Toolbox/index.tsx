@@ -32,7 +32,7 @@ const ToolBox: React.FC = () => {
     <div className={styles.toolboxContainer}>
       {showStroke && (
         <div className={styles.toolItem}>
-          <h4 className={styles.text}>Brush size</h4>
+          <h4 className={styles.text}>{activeNavItem === NAV_ITEMS.PENCIL ? "Brush" : "Eraser"} size</h4>
           <div className={styles.items}>
             <input type="range" min={1} max={10} onChange={handleBrushSize} value={size} />
           </div>
