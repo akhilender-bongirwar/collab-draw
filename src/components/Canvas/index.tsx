@@ -110,24 +110,29 @@ const Canvas: React.FC = () => {
       context.moveTo(x, y);
     };
 
-    const handleMouseDown = (e: MouseEvent) => {
-      validToDraw.current = true;
-      beginPath(e.clientX, e.clientY);
-      socket.emit('beginPath', {x: e.clientX, y: e.clientY});
-    };
-
     const traceLine = (x: number, y: number) => {
       if (!context) return;
       context.lineTo(x, y);
       context.stroke();
     };
-    const handleMouseMove = (e: MouseEvent) => {
-      if (!validToDraw.current) return;
-      traceLine(e.clientX, e.clientY);
-      socket.emit('traceLine', {x: e.clientX, y: e.clientY});
+
+    const handleMouseDown = (e: MouseEvent | TouchEvent) => {
+      validToDraw.current = true;
+      const clientX = e instanceof MouseEvent ? e.clientX : e.touches[0].clientX;
+      const clientY = e instanceof MouseEvent ? e.clientY : e.touches[0].clientY;
+      beginPath(clientX, clientY);
+      socket.emit('beginPath', {x: clientX, y: clientY});
     };
 
-    const handleMouseUp = (e: MouseEvent) => {
+    const handleMouseMove = (e: MouseEvent | TouchEvent) => {
+      if (!validToDraw.current) return;
+      const clientX = e instanceof MouseEvent ? e.clientX : e.touches[0].clientX;
+      const clientY = e instanceof MouseEvent ? e.clientY : e.touches[0].clientY;
+      traceLine(clientX, clientY);
+      socket.emit('traceLine', {x: clientX, y: clientY});
+    };
+
+    const handleMouseUp = (e: MouseEvent | TouchEvent) => {
       validToDraw.current = false;
       const imageData = context?.getImageData(
         0,
@@ -151,18 +156,20 @@ const Canvas: React.FC = () => {
     canvas.addEventListener("mousedown", handleMouseDown);
     canvas.addEventListener("mousemove", handleMouseMove);
     canvas.addEventListener("mouseup", handleMouseUp);
+    canvas.addEventListener('touchstart', handleMouseDown);
+    canvas.addEventListener('touchmove', handleMouseMove);
+    canvas.addEventListener('touchend', handleMouseUp);
 
     socket.on("beginPath", handlePath);
     socket.on("traceLine", handleDrawPath);
-
-    // socket.on("connect", () => {
-    //   console.log("Client side connected with the server");
-    // })
 
     return () => {
       canvas.removeEventListener("mousedown", handleMouseDown);
       canvas.removeEventListener("mousemove", handleMouseMove);
       canvas.removeEventListener("mouseup", handleMouseUp);
+      canvas.removeEventListener('touchstart', handleMouseDown);
+      canvas.removeEventListener('touchmove', handleMouseMove);
+      canvas.removeEventListener('touchend', handleMouseUp);
       socket.off('beginPath', handlePath);
       socket.off('drawPath', handleDrawPath);
     };
