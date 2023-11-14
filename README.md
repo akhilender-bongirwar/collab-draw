@@ -62,4 +62,4 @@ During the development of Collab Draw, I gained hands-on experience in utilizing
 
 ## Author
 
-- LinkedIn - [Akhilender Bongirwar]([https://linkedin.com/in/yourname](https://www.linkedin.com/in/akhilender-bongirwar)https://www.linkedin.com/in/akhilender-bongirwar)
+- LinkedIn - [Akhilender Bongirwar](https://www.linkedin.com/in/akhilender-bongirwar)
