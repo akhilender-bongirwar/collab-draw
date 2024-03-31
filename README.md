@@ -7,7 +7,8 @@
   - [Features](#features)
   - [Tech Stack](#tech-stack)
   - [Screenshots](#screenshots)
-  - [Live Demo](#live-demo)
+  - [Working Video](#working-video)
+  - [Deployed Link](#live-demo)
   - [What I Learned](#what-i-learned)
   - [Useful Resources](#useful-resources)
   - [Author](#author)
@@ -42,6 +43,10 @@ Collab Draw is a real-time collaborative drawing web application that allows mul
 ![Screenshot 2023-11-14 164626](https://github.com/akhilender-bongirwar/collab-draw/assets/112749383/e4d35cbe-e147-463d-982c-062cc78b1d24)
 
 
+### Working Video
+- https://github.com/akhilender-bongirwar/collab-draw/assets/112749383/c5da5dfc-606a-4a89-8fe1-d61763d03008
+- All the functionalities are shown in this working video of the application.
+  
 
 ### Live Demo
 
